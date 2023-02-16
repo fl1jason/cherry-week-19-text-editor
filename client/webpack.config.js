@@ -5,6 +5,7 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 
 // TODO: Add and configure workbox plugins for a service worker and manifest file.
 
+
 // Addded CSS loaders and babel to webpack.
 
 module.exports = () => {
@@ -18,9 +19,33 @@ module.exports = () => {
       filename: '[name].bundle.js',
       path: path.resolve(__dirname, 'dist'),
     },
+
+    //Added plugins
     plugins: [
-      
-    ],
+      new HtmlWebpackPlugin({
+        template: './index.html',
+        title: 'Webapck Plugin'
+      }),
+      new MiniCssExtractPlugin(),
+
+    new InjectManifest({
+      name:'Just Another Text Editor',
+      short_name: 'J.A.T.E',
+      description: 'Edit your text!',
+      background_color: '#C0C0C0',
+      theme_color: '#6C6A61',
+      start_url: './',
+      publicPath: './',
+      icons: [
+        {
+          src: path.resolve('src/images/logo.png'),
+          sizes: [100, 120, 200, 280, 360, 480],
+          destination: path.join('assets', 'icons'),
+        },
+      ],
+    })
+  ],
+
 
     module: {
       rules: [
@@ -30,7 +55,7 @@ module.exports = () => {
         },
         {
           test: /\.m?js$/,
-          exclude: /node_modules/,
+          exclude: /(node_modules|bower_components)/,
           use: {
             loader: 'babel-loader',
             options: {
