@@ -24,6 +24,7 @@ module.exports = () => {
         title: 'Webapck Plugin'
       }),
       new MiniCssExtractPlugin(),
+      new WorkboxPlugin.GenerateSW(),
 
     new InjectManifest({
       name:'Just Another Text Editor',
