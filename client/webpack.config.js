@@ -3,7 +3,7 @@ const WebpackPwaManifest = require('webpack-pwa-manifest');
 const path = require('path');
 const { InjectManifest } = require('workbox-webpack-plugin');
 
-// TODO: Add and configure workbox plugins for a service worker and manifest file.
+// Workbox plugins for service worker and manifest files.
 
 module.exports = () => {
   return {
@@ -23,8 +23,25 @@ module.exports = () => {
         template: './index.html',
         title: 'Webapck Plugin'
       }),
+      
       new MiniCssExtractPlugin(),
-      new WorkboxPlugin.GenerateSW(),
+     
+      new WorkboxPlugin.GenerateSW({
+        runtmeCaching: [{
+
+          exclude:  [/\.(?:png|jpg|jpeg|svg)$/],
+
+          handler: 'CacheFirst',
+
+          options: {
+            cacheName: 'imageCache',
+            expiration: {
+              maxEntries: 4,
+            },
+          },
+        }]
+       }
+    ),
 
     new InjectManifest({
       name:'Just Another Text Editor',
