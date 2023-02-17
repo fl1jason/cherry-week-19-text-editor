@@ -23,27 +23,13 @@ module.exports = () => {
         template: './index.html',
         title: 'Webapck Plugin'
       }),
-      
-      new MiniCssExtractPlugin(),
-     
-      new WorkboxPlugin.GenerateSW({
-        runtmeCaching: [{
 
-          exclude:  [/\.(?:png|jpg|jpeg|svg)$/],
+    new InjectManifest ({
+      swSrc: './src-sw.js',
+      swDest: 'src-sw.js'
+    }),
 
-          handler: 'CacheFirst',
-
-          options: {
-            cacheName: 'imageCache',
-            expiration: {
-              maxEntries: 4,
-            },
-          },
-        }]
-       }
-    ),
-
-    new InjectManifest({
+    new WebpackPwaManifest({
       name:'Just Another Text Editor',
       short_name: 'J.A.T.E',
       description: 'Edit your text!',
