@@ -32,4 +32,4 @@ if ('serviceWorker' in navigator) {
   console.error('Service workers are not supported in this browser.');
 }
 
-registerSW();
+//registerSW();

@@ -36,13 +36,13 @@ warmStrategyCache({
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
 //Register the service worker
-export const registerSW = () => {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/src-sw.js');
-    })
-  }
-}
+//export const registerSW = () => {
+  //if ('serviceWorker' in navigator) {
+    //window.addEventListener('load', () => {
+      //navigator.serviceWorker.register('/src-sw.js');
+    //})
+  //}
+//}
 
 //Install the servive worker
 self.addEventListener('install', (e) => e.waitUntil(
@@ -67,7 +67,7 @@ self.addEventListener('activate', (e) => { e.waitUntil(clients.claim());
 
 // Cache first
 self.addEventListener('fetch', (e) => e.respondWith(caches.match(e.request).then((res) =>
-res || fatch(e.request)))
+res || fetch(e.request)))
 );
 
 registerRoute();
