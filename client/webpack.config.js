@@ -28,7 +28,8 @@ module.exports = () => {
       swSrc: './src-sw.js',
       swDest: 'src-sw.js'
     }),
-
+    
+    //manifest.json file
     new WebpackPwaManifest({
       name:'Just Another Text Editor',
       short_name: 'J.A.T.E',
@@ -39,8 +40,8 @@ module.exports = () => {
       publicPath: './',
       icons: [
         {
-          src: path.resolve("/src/images/logo.png"),
-          sizes: [100, 120, 200, 280, 360, 480],
+          src: path.resolve("src/images/logo.png"),
+          sizes: [96, 128, 192, 256, 384, 512],
           destination: path.join('assets', 'icons'),
         },
       ],
@@ -57,7 +58,7 @@ module.exports = () => {
         },
         {
           test: /\.m?js$/,
-          exclude: /(node_modules|bower_components)/,
+          exclude: /(node_modules)/,
           use: {
             loader: 'babel-loader',
             options: {

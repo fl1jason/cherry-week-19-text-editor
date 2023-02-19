@@ -1,18 +1,9 @@
 const { offlineFallback, warmStrategyCache } = require('workbox-recipes');
-const { CacheFirst } = require('workbox-strategies');
+const { CacheFirst, StaleWhileRevalidate } = require('workbox-strategies');
 const { registerRoute } = require('workbox-routing');
 const { CacheableResponsePlugin } = require('workbox-cacheable-response');
 const { ExpirationPlugin } = require('workbox-expiration');
 const { precacheAndRoute } = require('workbox-precaching/precacheAndRoute');
-
-// Asset caching
-const urlCache = [
-  '/',
-  '/index.html',
-  '/css/style.css',
-  '/index.js',
-  'images/logo.png',
-];
 
 precacheAndRoute(self.__WB_MANIFEST);
 
@@ -35,39 +26,20 @@ warmStrategyCache({
 
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
-//Register the service worker
-//export const registerSW = () => {
-  //if ('serviceWorker' in navigator) {
-    //window.addEventListener('load', () => {
-      //navigator.serviceWorker.register('/src-sw.js');
-    //})
-  //}
-//}
-
-//Install the servive worker
-self.addEventListener('install', (e) => e.waitUntil(
-  caches.open(cacheName).then((cache) => cache.addAll(urlCache))
-)
-);
-//Activate the service worker
-self.addEventListener('activate', (e) => e.waitUntil(
-  caches.keys().then((keyList) => Promise.all(
-    keyList.map((key) => {
-      if (key !== cacheName) {
-        return caches.delete(key);
-      }
-    })
-  )
-  ))
-);
-
-// Claim the service worker
-self.addEventListener('activate', (e) => { e.waitUntil(clients.claim());
-});
-
-// Cache first
-self.addEventListener('fetch', (e) => e.respondWith(caches.match(e.request).then((res) =>
-res || fetch(e.request)))
+// Set up asset cache
+registerRoute(
+  // Here we define the callback function that will filter the requests we want to cache (in this case, JS and CSS files)
+  ({ request }) => ['style', 'script', 'worker'].includes(request.destination),
+  new StaleWhileRevalidate({
+    // Name of the cache storage.
+    cacheName: 'asset-cache',
+    plugins: [
+      // This plugin will cache responses with these headers to a maximum-age of 30 days
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+    ],
+  })
 );
 
 registerRoute();
